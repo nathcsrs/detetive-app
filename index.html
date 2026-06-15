@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#eef2ef" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Detetive" />
+    <title>Detetive - Folha Digital</title>
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+    <script>
+      (() => {
+        try {
+          const theme = window.localStorage.getItem("detetive-theme");
+          const fallback = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          document.documentElement.dataset.theme =
+            theme === "dark" || theme === "light" ? theme : fallback;
+        } catch {
+          document.documentElement.dataset.theme = "light";
+        }
+      })();
+    </script>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <section class="start-screen" id="startScreen" aria-labelledby="startTitle">
+      <div class="start-card">
+        <img class="start-logo" src="./icons/icon-192.png" alt="" width="112" height="112" />
+        <p class="eyebrow">Folha digital</p>
+        <h1 id="startTitle">Detetive</h1>
+        <p class="start-copy">Organize suas pistas e descubra o culpado.</p>
+        <div class="start-actions">
+          <button class="primary-button" id="continueButton" type="button">Continuar partida</button>
+          <button class="secondary-button" id="newGameButton" type="button">Nova partida</button>
+        </div>
+      </div>
+    </section>
+
+    <main class="app-shell" id="appMain" hidden>
+      <header class="topbar" aria-label="Painel principal">
+        <div>
+          <p class="eyebrow">Folha digital</p>
+          <h1>Detetive</h1>
+        </div>
+        <div class="top-actions">
+          <div class="theme-switch" aria-label="Tema do app">
+            <button type="button" data-theme-option="light" aria-pressed="true">☀️ Claro</button>
+            <button type="button" data-theme-option="dark" aria-pressed="false">🌙 Escuro</button>
+          </div>
+          <button class="reset-button" id="resetButton" type="button" title="Começar um novo jogo">
+            Novo jogo
+          </button>
+        </div>
+      </header>
+
+      <section class="solution-panel" aria-labelledby="solutionTitle">
+        <div>
+          <p class="eyebrow">Solução</p>
+          <h2 id="solutionTitle">Combinação confirmada</h2>
+        </div>
+        <div class="solution-grid" id="solutionGrid"></div>
+      </section>
+
+      <section class="legend" aria-label="Legenda de marcações">
+        <span><b>✖ D</b> Descartado</span>
+        <span><b>🔎 S</b> Suspeita</span>
+        <span><b>📌 C</b> Confirmado</span>
+      </section>
+
+      <section class="case-tools" aria-label="Ferramentas do caso">
+        <button class="review-button" id="reviewButton" type="button" aria-pressed="false">
+          Revisar caso
+        </button>
+      </section>
+
+      <p class="case-alert" id="caseAlert" role="status" hidden>
+        Caso pronto para acusação. Revise antes de confirmar.
+      </p>
+
+      <section class="category-grid" id="categoryGrid" aria-label="Categorias do jogo"></section>
+    </main>
+
+    <button class="back-top-button" id="backTopButton" type="button" hidden>
+      ↑ Topo
+    </button>
+
+    <div class="confirm-overlay" id="confirmDialog" role="dialog" aria-modal="true" aria-labelledby="confirmTitle" aria-describedby="confirmText" hidden>
+      <section class="confirm-card">
+        <h2 id="confirmTitle">Nova partida</h2>
+        <p id="confirmText">Tem certeza que deseja apagar a partida atual?</p>
+        <div class="confirm-actions">
+          <button class="secondary-button" id="cancelNewGameButton" type="button">Cancelar</button>
+          <button class="primary-button danger-button" id="confirmNewGameButton" type="button">
+            Começar nova partida
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <script src="./app.js"></script>
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("./service-worker.js").catch(() => {});
+        });
+      }
+    </script>
+  </body>
+</html>
